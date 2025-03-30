@@ -11,8 +11,10 @@ const Game = () => {
 
   // Start game when component mounts
   useEffect(() => {
-    startGame();
-  }, []);
+    if (!sessionId) {
+      startGame();
+    }
+  }, [sessionId]);
 
   const startGame = async () => {
     try {
