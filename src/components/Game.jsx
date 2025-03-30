@@ -8,6 +8,7 @@ const Game = () => {
   const [userGuess, setUserGuess] = useState("");
   const [message, setMessage] = useState("");
   const [timer, setTimer] = useState(10); // 10-second timer
+  const [timerInterval, setTimerInterval] = useState(null);
 
   // Start game when component mounts
   useEffect(() => {
@@ -38,15 +39,25 @@ const Game = () => {
         }
       );
 
+      console.log("Backend response:", response.data);
+
       if (response.data.correct) {
         setMessage("🎉 Correct! You guessed the song!");
-      } else {
-        setGuessesLeft((prev) => prev - 1);
-        setLyricsHint(response.data.newLyricsHint);
-        setMessage("❌ Wrong guess! More lyrics revealed...");
+        clearInterval(timerInterval);
+        setTimer(10);
+        return;
       }
 
-      setTimer(10); // Reset timer for next round
+      setGuessesLeft((prev) => prev - 1);
+
+      if (response.data.hint !== undefined && response.data.hint !== "") {
+        setLyricsHint(response.data.hint);
+      } else {
+        console.warn("No new lyrics hint received");
+      }
+
+      setMessage("Wrong guess! More lyrics revealed...");
+      setTimer(10);
     } catch (error) {
       console.error("Error submitting guess:", error);
     }
@@ -54,24 +65,21 @@ const Game = () => {
 
   // Timer countdown logic
   useEffect(() => {
-    if (guessesLeft > 0 && sessionId) {
-      const countdown = setInterval(() => {
-        setTimer((prev) => {
-          if (prev === 1) {
-            setGuessesLeft((prev) => prev - 1); // Reduce guesses
-            setMessage("⏳ Time ran out! More lyrics revealed...");
-            setTimer(10); // Reset timer
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    if (guessesLeft <= 0 || timer === null) return;
 
-      return () => clearInterval(countdown);
-    } else {
-      // Stop the countdown if guesses are over or a message is shown
-      setTimer(10);
-    }
-  }, [sessionId, guessesLeft]); // Ensures the timer runs only when the game is active
+    const countdown = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 1) {
+          handleGuess("");
+          return 10;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    setTimerInterval(countdown);
+    return () => clearInterval(countdown);
+  }, [guessesLeft, sessionId]); // Ensures the timer runs only when the game is active
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-5">
