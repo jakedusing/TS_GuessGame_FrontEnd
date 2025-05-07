@@ -82,33 +82,49 @@ const Game = () => {
   }, [guessesLeft, sessionId]); // Ensures the timer runs only when the game is active
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-5">
-      <h1 className="text-3xl font-bold mb-5">🎶 Taylor Swift Guess Game</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-indigo-900 text-white font-sans p-6">
+      <h1 className="text-4xl font-semibold mb-6 text-indigo-100 tracking-wide drop-shadow-sm">
+        Lyric Guess Game
+      </h1>
 
       {guessesLeft > 0 ? (
         <>
-          <p className="text-lg italic text-center bg-gray-800 p-3 rounded">
-            "{lyricsHint}"
-          </p>
-          <p className="mt-3 text-red-300">⏳ Time left: {timer}s</p>
-          <input
-            type="text"
-            value={userGuess}
-            onChange={(e) => setUserGuess(e.target.value)}
-            placeholder="Enter song name..."
-            className="mt-4 p-2 rounded text-black"
-          />
-          <button
-            onClick={() => handleGuess(userGuess)}
-            className="mt-3 px-4 py-2 bg-blue-500 rounded hover:bg-blue-700"
-          >
-            Submit Guess
-          </button>
-          <p className="mt-3 text-yellow-300">❤️ Guesses left: {guessesLeft}</p>
-          {message && <p className="mt-2">{message}</p>}
+          <div className="bg-indigo-800/30 border border-indigo-400/50 p-5 rounded-lg shadow-md w-full max-w-full">
+            <p className="text-xl italic text-center text-indigo-100 mb-4">
+              "{lyricsHint}"
+            </p>
+
+            <p className="text-sm text-indigo-300 mb-2 text-center">
+              Time left: <span className="font-bold">{timer}s</span>
+            </p>
+
+            <input
+              type="text"
+              value={userGuess}
+              onChange={(e) => setUserGuess(e.target.value)}
+              placeholder="Name the song..."
+              className="w-full p-3 rounded-md bg-indigo-100 text-indigo-900 placeholder-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-3"
+            />
+
+            <button
+              onClick={() => handleGuess(userGuess)}
+              className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md transition duration-300 shadow-sm"
+            >
+              Submit GUess
+            </button>
+
+            <div className="mt-4 text-center">
+              <p className="text-indigo-200">Guesses left: {guessesLeft}</p>
+              {message && (
+                <p className="mt-2 text-indigo-100 font-medium">{message}</p>
+              )}
+            </div>
+          </div>
         </>
       ) : (
-        <p className="text-2xl text-red-500">Game Over! Try Again.</p>
+        <p className="text-2xl text-rose-400 mt-10 font-semibold drop-shadow">
+          Game Over! Try Again.
+        </p>
       )}
     </div>
   );
