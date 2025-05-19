@@ -122,7 +122,7 @@ const Game = () => {
           </div>
         </>
       ) : (
-        <p className="text-2xl text-rose-400 mt-10 font-semibold drop-shadow">
+        <p className="text-2xl text-rose-300 mt-10 font-semibold drop-shadow">
           Game Over! Try Again.
         </p>
       )}
